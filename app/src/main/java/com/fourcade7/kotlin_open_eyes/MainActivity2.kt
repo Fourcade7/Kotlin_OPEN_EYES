@@ -53,6 +53,7 @@ class MainActivity2 : AppCompatActivity(), OnMapReadyCallback {
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Svetafors")
         readfromdatabase()
+        lastlocation()
         buildLocationRequest()
         startLocationUpdates()
 
