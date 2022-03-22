@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+
+    tools:context=".MainActivity2">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        android:layout_above="@id/button1"
+        >
+        <fragment
+            android:id="@+id/googlemap2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            ></fragment>
+    </androidx.cardview.widget.CardView>
+
+
+    <Button
+        android:layout_margin="15dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/button1"
+        android:text="Add a new traffic light"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></Button>
+
+</RelativeLayout>

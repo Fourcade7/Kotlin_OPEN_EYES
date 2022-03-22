@@ -2,5 +2,6 @@
     <string name="app_name">OPEN EYES</string>
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC5onKHphjGxNodg6nVf77iBfU6ncT15g4</string>
+    <string name="aboutapp">This app is designed for visually impaired people to cross the highway and show the voice route along the sidewalk. The app also uses artificial intelligence elements to detect if a pedestrian traffic light is red or green when crossing a highway.</string>
 
 </resources>
