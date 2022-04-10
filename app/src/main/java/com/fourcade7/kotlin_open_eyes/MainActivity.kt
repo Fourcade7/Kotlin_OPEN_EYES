@@ -1,6 +1,7 @@
 package com.fourcade7.kotlin_open_eyes
 
 import android.Manifest
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -43,6 +45,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var locationRequest: com.google.android.gms.location.LocationRequest
     val REQUEST_CHECK_SETTINGS = 10001;
 
+
+    lateinit var cameraInt:Intent
+
     companion object {
         var lat: Double? = null
         var lon: Double? = null
@@ -55,10 +60,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     var lon1: Double? = null
 
     var camera = true
+    var m=true
 
     //update lccation
     lateinit var locationCallback: LocationCallback
     var idgroup = LatLng(41.5512370, 60.6271150)
+    //mediaplayer
+    lateinit var mediaPlayercamera:MediaPlayer
+    lateinit var mediaPlayerred:MediaPlayer
+    lateinit var mediaPlayegreen:MediaPlayer
 
     //for map
     lateinit var googleMap: GoogleMap
@@ -77,6 +87,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.googlemap) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        mediaPlayercamera=MediaPlayer.create(this@MainActivity, R.raw.camera_1)
+        mediaPlayerred=MediaPlayer.create(this@MainActivity, R.raw.camera_2)
+        mediaPlayegreen=MediaPlayer.create(this@MainActivity, R.raw.camera_3)
+
+        imageview1.setOnClickListener {
+           if (m){
+               imageview2.visibility=View.INVISIBLE
+               linearlay1.visibility=View.VISIBLE
+               imageview1.setImageResource(R.drawable.call2)
+               m=false
+           }else{
+               imageview2.visibility=View.VISIBLE
+               linearlay1.visibility=View.INVISIBLE
+               imageview1.setImageResource(R.drawable.map2)
+               m=true
+           }
+        }
+        imageview2.setOnClickListener {
+            startActivity(Intent(this@MainActivity,MainActivity4::class.java))
+        }
+
 
 
 
@@ -84,6 +115,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun opencamera(){
+
+
         if (ContextCompat.checkSelfPermission(
                 applicationContext,Manifest.permission.CAMERA
             )== PackageManager.PERMISSION_DENIED)
@@ -93,7 +126,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         /**set camera Open*/
 
-            val cameraInt = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraInt = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(cameraInt,1)
 
 
@@ -202,7 +235,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                     GlobalScope.launch(Dispatchers.Main) {
-                        delay(500)
+                        delay(1000)
                         lat = location.latitude
                         lon = location.longitude
                         onMapReady(googleMap)
@@ -267,23 +300,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         .title("Traffic Light")
                         .snippet("$i")
                    if (a<5){
-                       markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.qizil2))
+                       markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.qizil3))
                        googleMap.addMarker(markerOptions)
                        b=1
                    }
+
                     if (a>5 && a<10){
-                        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.sariq2))
+
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.yashil3))
                         googleMap.addMarker(markerOptions)
                         b=2
-                    }
-                    if (a>10 && a<15){
-
-                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.yashil2))
-                        googleMap.addMarker(markerOptions)
-                        b=3
 
                     }
-                    if (a>15){
+                    if (a>10){
                         a=0
                     }
 
@@ -294,85 +323,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     location2.latitude = lat1 as Double
                     location2.longitude = lon1 as Double
                     var distance = location1.distanceTo(location2)
-                    //Toast.makeText(this@MainActivity, "$distance m", Toast.LENGTH_SHORT).show()
-                    val mediaPlayer: MediaPlayer
-                    val mediaPlayer2: MediaPlayer
-                    val mediaPlayer3: MediaPlayer
-                    val mediaPlayer4: MediaPlayer
+                    //Toast.makeText(this@MainActivity, "${distance.toInt()} m", Toast.LENGTH_SHORT).show()
 
-                    mediaPlayer = MediaPlayer.create(this@MainActivity, R.raw.camera)
-                    mediaPlayer2 = MediaPlayer.create(this@MainActivity, R.raw.red)
-                    mediaPlayer3 = MediaPlayer.create(this@MainActivity, R.raw.yellow)
-                    mediaPlayer4 = MediaPlayer.create(this@MainActivity, R.raw.green)
+                    if(distance<6){
 
+                       if (camera){
+                           mediaPlayercamera.start()
+                           delay(7000)
+                           opencamera()
+                           delay(2000)
+                           if (b==1){
+                               mediaPlayerred.start()
+                               camera=true
+                               delay(2000)
 
-                    if (distance < 6.0) {
-
-                        mediaPlayer.start()
-                        delay(1000)
-                        if (b==1){
-                            mediaPlayer2.start()
-                            opencamera()
-                        }else{
-                            mediaPlayer2.stop()
-
-                        }
-                        if (b==2){
-                            mediaPlayer3.start()
-                            opencamera()
-
-                        }else{
-                            mediaPlayer3.stop()
-                        }
-                        if (b==3){
-                            mediaPlayer4.start()
-                            opencamera()
-
-                        }else{
-                            mediaPlayer4.stop()
-                        }
+                           }
+                           if (b==2){
+                               mediaPlayegreen.start()
+                               camera=true
+                               delay(2000)
 
 
+                           }
+                           camera=false
+                       }
 
-
-                    } else {
-                        mediaPlayer.stop()
 
                     }
 
-                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.qizil2))
 
-                    //Toast.makeText(this@MainActivity2, i.toString(), Toast.LENGTH_SHORT).show()
+
                 }
 
             }
         }
 
-//        if (lat != null && lon != null) {
-//            googleMap.clear()
-//            var lastlocation = LatLng(lat!!, lon!!)
-//            var markerOptions = MarkerOptions()
-//                .position(lastlocation)
-//                .title("Pr")
-//            googleMap.addMarker(markerOptions)
-//            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastlocation, 15f))
-//            var location1 = Location("Beruniy")//41.67739/60.738
-//            location1.latitude = lat as Double
-//            location1.longitude = lon as Double
-//            var location2 = Location("Svetafor")
-//            location2.latitude = 41.6766009
-//            location2.longitude = 60.7388095
-//            var distance = location1.distanceTo(location2)
-//            //Toast.makeText(this@MainActivity, "$distance m", Toast.LENGTH_SHORT).show()
-//            val mediaPlayer: MediaPlayer
-//            mediaPlayer = MediaPlayer.create(this@MainActivity, R.raw.windowserror)
-//            if (distance < 7.0) {
-//
-//                mediaPlayer.start()
-//            } else {
-//                mediaPlayer.stop()
-//            }
-//        }
+
 
     }
 
