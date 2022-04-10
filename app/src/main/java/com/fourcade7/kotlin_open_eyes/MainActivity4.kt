@@ -41,12 +41,20 @@ class MainActivity4 : AppCompatActivity() {
     val callType:String = CometChatConstants.CALL_TYPE_VIDEO
 
 
+
+    var zoomid="https://us04web.zoom.us/j/71197029243?pwd=cIBKuhCMdGFl-QfkSgmfiLJK8v7hmw.1"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main4)
         setTitle("Video Call")
 
+        webview1.loadUrl(zoomid)
 
+        val webSettings=webview1.settings
+        webSettings.javaScriptEnabled=true
+        webview1.webViewClient=WebViewClient()
 
 
 
